@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
     .order("signed_at", { ascending: false });
 
   if (error) {
-    console.error("Documents fetch error:", error);
+    console.error("Documents fetch error:", error instanceof Error ? error.message : "database error");
     return NextResponse.json({ error: "Failed to fetch documents" }, { status: 500 });
   }
 

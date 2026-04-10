@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (error) {
-      console.error("KMS store error:", error);
+      console.error("KMS store error:", error instanceof Error ? error.message : "database error");
       return NextResponse.json(
         { error: "Failed to store key material" },
         { status: 500 }

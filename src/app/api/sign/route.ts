@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
       .upload(originalPath, originalBytes, { contentType: "application/pdf" });
 
     if (uploadOriginalError) {
-      console.error("Original upload error:", uploadOriginalError);
+      console.error("Original upload error:", uploadOriginalError instanceof Error ? uploadOriginalError.message : "storage error");
       return NextResponse.json(
         { error: "Failed to store original document" },
         { status: 500 }
@@ -127,7 +127,7 @@ export async function POST(req: NextRequest) {
       .upload(signedPath, signedPdfBytes, { contentType: "application/pdf" });
 
     if (uploadSignedError) {
-      console.error("Signed upload error:", uploadSignedError);
+      console.error("Signed upload error:", uploadSignedError instanceof Error ? uploadSignedError.message : "storage error");
       return NextResponse.json(
         { error: "Failed to store signed document" },
         { status: 500 }
@@ -150,7 +150,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (dbError) {
-      console.error("DB insert error:", dbError);
+      console.error("DB insert error:", dbError instanceof Error ? dbError.message : "database error");
       return NextResponse.json(
         { error: "Failed to record document metadata" },
         { status: 500 }
@@ -170,7 +170,7 @@ export async function POST(req: NextRequest) {
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
-    console.error("Sign error:", err);
+    console.error("Sign error:", err instanceof Error ? err.message : "unknown error");
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
