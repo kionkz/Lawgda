@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lawgda – Secure Digital Signing &amp; Verification</title>
+  <style>
+    /* ════════════════════════════════════════
+       RESET & BASE
+    ════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; }
+    body {
+      font-family: "Georgia", "Times New Roman", serif;
+      background: #F2F2F4;
+      color: #1A1A1A;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    /* sans-serif utility */
+    .sans { font-family: "Helvetica Neue", Arial, sans-serif; }
+
+    /* ════════════════════════════════════════
+       COLOUR TOKENS
+    ════════════════════════════════════════ */
+    :root {
+      --burg:        #800020;
+      --burg-dark:   #5C0016;
+      --burg-light:  #F5E6EC;
+      --burg-line:   #8B1A2C;
+      --black:       #0D0D0D;
+      --charcoal:    #1A1A1A;
+      --grey-dark:   #3A3A3A;
+      --grey-mid:    #6B6B6B;
+      --grey-light:  #D0CBC2;
+      --grey-bg:     #F2F2F4;
+      --grey-card:   #FAFAFA;
+      --white:       #FFFFFF;
+      --success:     #2A6040;
+      --success-bg:  #EAF4EE;
+      --error:       #8B2020;
+      --error-bg:    #FAEAEA;
+    }
+
+    /* ════════════════════════════════════════
+       LAYOUT HELPERS
+    ════════════════════════════════════════ */
+    .container    { max-width: 960px;  margin: 0 auto; padding: 0 28px; }
+    .container-sm { max-width: 660px;  margin: 0 auto; padding: 0 28px; }
+    .flex         { display: flex; }
+    .flex-col     { flex-direction: column; }
+    .items-center { align-items: center; }
+    .items-start  { align-items: flex-start; }
+    .justify-between { justify-content: space-between; }
+    .justify-center  { justify-content: center; }
+    .gap-2 { gap: 8px;  }
+    .gap-3 { gap: 12px; }
+    .gap-4 { gap: 16px; }
+    .gap-5 { gap: 20px; }
+    .flex-1   { flex: 1; }
+    .shrink-0 { flex-shrink: 0; }
+    .wrap     { flex-wrap: wrap; }
+    .text-center { text-align: center; }
+    .text-right  { text-align: right; }
+    .hidden { display: none !important; }
+    a { color: var(--burg-dark); }
+
+    /* ════════════════════════════════════════
+       SCREEN SWITCHING
+    ════════════════════════════════════════ */
+    .screen { display: none; flex: 1; }
+    .screen.active { display: block; }
+
+    /* ════════════════════════════════════════
+       NAVBAR
+    ════════════════════════════════════════ */
+    nav {
+      background: var(--black);
+      color: var(--white);
+      padding: 0 28px;
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      position: sticky; top: 0; z-index: 50;
+      border-bottom: 2px solid var(--burg);
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 14px;
+      background: none; color: var(--white);
+      border: none; cursor: pointer;
+      padding: 16px 0;
+      text-decoration: none;
+    }
+    .nav-logo-name {
+      font-family: "Georgia", serif;
+      font-size: 20px; font-weight: 700;
+      letter-spacing: 4px; text-transform: uppercase;
+      color: var(--burg);
+    }
+    .nav-logo-divider {
+      width: 1px; height: 22px;
+      background: rgba(122,21,48,.35);
+    }
+    .nav-logo-sub {
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 10px; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--grey-light);
+    }
+    .nav-links { display: flex; gap: 0; }
+    .nav-links button {
+      background: transparent; color: var(--grey-light);
+      border: none; cursor: pointer;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 12px; font-weight: 500; letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 0 18px; height: 100%;
+      border-left: 1px solid rgba(122,21,48,.12);
+      transition: color .15s, background .15s;
+    }
+    .nav-links button:hover {
+      color: var(--burg);
+      background: rgba(122,21,48,.06);
+    }
+
+    /* ════════════════════════════════════════
+       GOLD RULE DIVIDER
+    ════════════════════════════════════════ */
+    .gold-rule {
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--burg-line), transparent);
+      margin: 0;
+    }
+
+    /* ════════════════════════════════════════
+       FOOTER
+    ════════════════════════════════════════ */
+    footer {
+      background: var(--black);
+      border-top: 2px solid var(--burg);
+      color: var(--grey-mid);
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 11px; letter-spacing: 1px;
+      text-align: center; padding: 14px;
+      margin-top: auto;
+    }
+    footer span { color: var(--burg); }
+
+    /* ════════════════════════════════════════
+       CARD
+    ════════════════════════════════════════ */
+    .card {
+      background: var(--grey-card);
+      border: 1px solid var(--grey-light);
+      border-top: 3px solid var(--burg);
+      border-radius: 2px;
+      padding: 28px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.07);
+    }
+
+    /* ════════════════════════════════════════
+       BUTTONS
+    ════════════════════════════════════════ */
+    .btn {
+      display: inline-block;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 12px 28px;
+      border-radius: 2px;
+      cursor: pointer;
+      border: none;
+      transition: all .18s;
+      line-height: 1.4;
+      text-decoration: none;
+    }
+    .btn-gold {
+      background: var(--burg);
+      color: var(--white);
+      border: 1px solid var(--burg-dark);
+    }
+    .btn-gold:hover { background: var(--burg-dark); color: var(--white); }
+    .btn-outline {
+      background: transparent;
+      color: var(--charcoal);
+      border: 1px solid var(--grey-dark);
+    }
+    .btn-outline:hover { border-color: var(--burg); color: var(--burg-dark); }
+    .btn-dark {
+      background: var(--black);
+      color: var(--burg);
+      border: 1px solid var(--burg-dark);
+    }
+    .btn-dark:hover { background: var(--grey-dark); }
+    .btn-full { width: 100%; text-align: center; display: block; padding: 13px 0; }
+    .btn:disabled { opacity: .45; cursor: not-allowed; }
+
+    /* ════════════════════════════════════════
+       INPUTS
+    ════════════════════════════════════════ */
+    .input-label {
+      display: block;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--grey-mid);
+      margin-bottom: 5px;
+    }
+    .input {
+      width: 100%;
+      background: var(--white);
+      border: 1px solid var(--grey-light);
+      border-bottom: 2px solid var(--grey-light);
+      border-radius: 2px;
+      padding: 9px 12px;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 14px;
+      color: var(--charcoal);
+      outline: none;
+      transition: border-color .15s;
+    }
+    .input:focus { border-color: var(--burg); border-bottom-color: var(--burg); }
+
+    /* ════════════════════════════════════════
+       BADGES
+    ════════════════════════════════════════ */
+    .badge {
+      display: inline-block;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 1px;
+    }
+    .badge-gold   { background: var(--burg-light); color: var(--burg-dark); border: 1px solid var(--burg); }
+    .badge-green  { background: var(--success-bg); color: var(--success); border: 1px solid #8FC8A8; }
+    .badge-red    { background: var(--error-bg);   color: var(--error);   border: 1px solid #E8A8A8; }
+    .badge-grey   { background: #E8E5E0; color: var(--grey-dark); border: 1px solid #C0BDB8; }
+
+    /* ════════════════════════════════════════
+       ALERTS
+    ════════════════════════════════════════ */
+    .alert { border-radius: 2px; padding: 14px 16px; }
+    .alert-success {
+      background: var(--success-bg);
+      border: 1px solid #8FC8A8;
+      border-left: 4px solid var(--success);
+    }
+    .alert-error {
+      background: var(--error-bg);
+      border: 1px solid #E8A8A8;
+      border-left: 4px solid var(--error);
+    }
+    .alert-info {
+      background: #F5F2F4;
+      border: 1px solid var(--burg);
+      border-left: 4px solid var(--burg-dark);
+    }
+
+    /* ════════════════════════════════════════
+       DROPZONE
+    ════════════════════════════════════════ */
+    .dropzone {
+      border: 2px dashed var(--grey-light);
+      border-radius: 2px;
+      padding: 40px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+      background: var(--white);
+    }
+    .dropzone:hover { border-color: var(--burg); background: #FDF5F6; }
+    .dropzone-icon { font-size: 32px; margin-bottom: 10px; filter: grayscale(1); }
+
+    /* ════════════════════════════════════════
+       STEP INDICATOR
+    ════════════════════════════════════════ */
+    .steps { display: flex; align-items: center; margin-bottom: 28px; }
+    .step-circle {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 12px; font-weight: 700; flex-shrink: 0;
+      border: 2px solid;
+    }
+    .step-circle.done    { background: var(--burg-dark); color: var(--white); border-color: var(--burg-dark); }
+    .step-circle.active  { background: var(--black); color: var(--burg); border-color: var(--burg); }
+    .step-circle.pending { background: transparent; color: var(--grey-light); border-color: var(--grey-light); }
+    .step-label {
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 10px; letter-spacing: .5px; margin-left: 5px;
+    }
+    .step-label.active  { font-weight: 700; color: var(--charcoal); }
+    .step-label.pending { color: var(--grey-light); }
+    .step-line { flex: 1; height: 1px; margin: 0 6px; }
+    .step-line.pending { background: var(--grey-light); }
+    .step-line.done    { background: var(--burg); }
+
+    /* ════════════════════════════════════════
+       DETAIL ROWS
+    ════════════════════════════════════════ */
+    .detail-row {
+      display: flex; justify-content: space-between; gap: 12px;
+      padding: 8px 0; border-bottom: 1px solid #EAE7E2;
+      font-family: "Helvetica Neue", Arial, sans-serif; font-size: 13px;
+    }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-key { color: var(--grey-mid); flex-shrink: 0; }
+    .detail-val { font-weight: 500; text-align: right; word-break: break-all; }
+    .mono { font-family: "Courier New", Courier, monospace; font-size: 11px; }
+
+    /* ════════════════════════════════════════
+       CHECK ROWS
+    ════════════════════════════════════════ */
+    .check-row {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 11px 14px;
+      background: var(--white);
+      border: 1px solid var(--grey-light);
+      border-radius: 2px;
+    }
+    .check-icon  { font-size: 16px; margin-top: 1px; filter: grayscale(1); }
+    .check-title { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 13px; font-weight: 600; color: var(--charcoal); }
+    .check-desc  { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 12px; color: var(--grey-mid); margin-top: 2px; }
+
+    /* ════════════════════════════════════════
+       SIGNATURE PAGE PREVIEW
+    ════════════════════════════════════════ */
+    .sig-preview {
+      background: var(--white);
+      border: 1px solid var(--grey-light);
+      border-top: 3px solid var(--burg);
+      border-radius: 2px;
+      overflow: hidden;
+      font-size: 11px;
+      color: var(--charcoal);
+      box-shadow: 0 4px 18px rgba(0,0,0,.1);
+    }
+    .sig-preview-header {
+      background: var(--black);
+      border-bottom: 2px solid var(--burg);
+      color: var(--white);
+      padding: 14px 18px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .sig-preview-title {
+      font-family: "Georgia", serif;
+      font-size: 17px; font-weight: 700;
+      letter-spacing: 3px; color: var(--burg);
+    }
+    .sig-preview-sub   { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 9px; letter-spacing: 1px; color: var(--grey-light); margin-top: 2px; }
+    .sig-preview-cert  {
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 9px; letter-spacing: 1px;
+      border: 1px solid var(--burg);
+      color: var(--burg); padding: 4px 8px; border-radius: 1px;
+    }
+    .sig-preview-body  { padding: 16px 18px; }
+    .sig-preview-body table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
+    .sig-preview-body table td { padding: 3px 2px; vertical-align: top; font-family: "Helvetica Neue", Arial, sans-serif; }
+    .sig-preview-body table td:first-child { color: var(--grey-mid); width: 36%; font-weight: 600; font-size: 9.5px; letter-spacing: .5px; }
+    .sig-preview-section {
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 9px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--burg-dark); margin-bottom: 6px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .sig-preview-section::after { content: ''; flex: 1; height: 1px; background: var(--burg-light); }
+    .sig-preview-inner { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .sig-preview-qr {
+      width: 78px; height: 78px; flex-shrink: 0;
+      background: repeating-conic-gradient(#000 0% 25%, #fff 0% 50%) 0 0 / 7px 7px;
+      border: 2px solid #000; border-radius: 2px;
+    }
+    .sig-preview-footer {
+      background: #F2F2F4; padding: 9px 18px;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 9px; letter-spacing: .5px; color: var(--grey-mid);
+      border-top: 1px solid var(--grey-light);
+    }
+
+    /* ════════════════════════════════════════
+       SPINNER
+    ════════════════════════════════════════ */
+    .spinner {
+      width: 48px; height: 48px; border-radius: 50%;
+      border: 3px solid var(--burg-light);
+      border-top-color: var(--burg-dark);
+      animation: spin .9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ════════════════════════════════════════
+       FEATURE GRID
+    ════════════════════════════════════════ */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1px;
+      background: var(--grey-light);
+      border: 1px solid var(--grey-light);
+    }
+    .feature-cell {
+      background: var(--grey-card);
+      padding: 28px 24px;
+      transition: background .15s;
+    }
+    .feature-cell:hover { background: #FDF5F6; }
+    .feature-icon  { font-size: 24px; margin-bottom: 12px; filter: grayscale(1) brightness(.3); }
+    .feature-title { font-size: 14px; font-weight: 700; margin-bottom: 7px; color: var(--charcoal); font-family: "Georgia", serif; }
+    .feature-desc  { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 12px; color: var(--grey-mid); line-height: 1.6; }
+
+    /* ════════════════════════════════════════
+       HOW IT WORKS
+    ════════════════════════════════════════ */
+    .how-step { display: flex; gap: 18px; align-items: flex-start; }
+    .how-num {
+      width: 44px; height: 44px; flex-shrink: 0;
+      background: var(--black);
+      border: 2px solid var(--burg);
+      color: var(--burg);
+      display: flex; align-items: center; justify-content: center;
+      font-family: "Georgia", serif; font-weight: 700; font-size: 15px;
+    }
+    .how-content {
+      background: var(--grey-card);
+      border: 1px solid var(--grey-light);
+      border-left: 3px solid var(--burg);
+      padding: 16px 20px; flex: 1;
+    }
+    .how-title { font-size: 14px; font-weight: 700; color: var(--charcoal); margin-bottom: 4px; font-family: "Georgia", serif; }
+    .how-desc  { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 12px; color: var(--grey-mid); line-height: 1.6; }
+
+    /* ════════════════════════════════════════
+       TECH STACK
+    ════════════════════════════════════════ */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 1px;
+      background: var(--grey-light);
+      border: 1px solid var(--grey-light);
+    }
+    .tech-cell {
+      background: var(--grey-card);
+      padding: 16px 14px; text-align: center;
+    }
+    .tech-label { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--burg-dark); margin-bottom: 5px; }
+    .tech-value { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 13px; font-weight: 500; color: var(--charcoal); }
+
+    /* ════════════════════════════════════════
+       COMPLIANCE BAND
+    ════════════════════════════════════════ */
+    .compliance-band {
+      background: var(--black);
+      border: 1px solid var(--burg);
+      border-top: 3px solid var(--burg);
+      padding: 32px 28px; text-align: center;
+    }
+    .compliance-band h2 { font-family: "Georgia", serif; color: var(--burg); font-size: 20px; font-weight: 700; letter-spacing: 1px; margin-bottom: 6px; }
+    .compliance-band p  { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 12px; color: var(--grey-mid); letter-spacing: .5px; margin-bottom: 18px; }
+    .compliance-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+    .comp-tag {
+      border: 1px solid rgba(122,21,48,.4);
+      color: var(--burg-light);
+      padding: 6px 16px;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+      border-radius: 1px;
+    }
+
+    /* ════════════════════════════════════════
+       HERO
+    ════════════════════════════════════════ */
+    .hero {
+      background: var(--black);
+      border-bottom: 2px solid var(--burg);
+      padding: 68px 28px 56px;
+      text-align: center;
+      color: var(--white);
+      position: relative;
+      overflow: hidden;
+    }
+    /* subtle grid pattern */
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(122,21,48,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(122,21,48,.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      border: 1px solid rgba(122,21,48,.5);
+      color: var(--burg);
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+      padding: 6px 20px; margin-bottom: 24px;
+      position: relative;
+    }
+    .hero-title {
+      font-family: "Georgia", serif;
+      font-size: clamp(30px, 5vw, 52px);
+      font-weight: 700; line-height: 1.1;
+      color: var(--white); margin-bottom: 18px;
+      position: relative;
+    }
+    .hero-title .gold { color: var(--burg); }
+    .hero-sub {
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 15px; color: var(--grey-light);
+      max-width: 520px; margin: 0 auto 32px;
+      line-height: 1.7; position: relative;
+    }
+    .hero-cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; position: relative; }
+
+    /* ════════════════════════════════════════
+       DOC LIST
+    ════════════════════════════════════════ */
+    .doc-row {
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
+      background: var(--grey-card);
+      border: 1px solid var(--grey-light);
+      border-left: 3px solid var(--burg);
+      padding: 20px 22px;
+      margin-bottom: 12px;
+      transition: border-left-color .15s, box-shadow .15s;
+    }
+    .doc-row:hover { border-left-color: var(--burg-dark); box-shadow: 0 2px 10px rgba(0,0,0,.07); }
+
+    /* ════════════════════════════════════════
+       SECTION HEADERS
+    ════════════════════════════════════════ */
+    .section-header {
+      text-align: center; margin-bottom: 28px;
+    }
+    .section-eyebrow {
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 10px; font-weight: 700; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--burg-dark);
+      display: block; margin-bottom: 8px;
+    }
+    .section-title {
+      font-family: "Georgia", serif;
+      font-size: 24px; font-weight: 700; color: var(--charcoal);
+    }
+    .section-rule {
+      display: flex; align-items: center; gap: 12px;
+      margin: 10px auto 0; max-width: 160px;
+    }
+    .section-rule span { flex: 1; height: 1px; background: var(--burg); }
+    .section-rule i { width: 5px; height: 5px; background: var(--burg); transform: rotate(45deg); display: block; }
+
+    /* ════════════════════════════════════════
+       PAGE SECTION SPACERS
+    ════════════════════════════════════════ */
+    section { padding: 48px 0; }
+    section + section { padding-top: 0; }
+
+    /* ════════════════════════════════════════
+       FADE IN
+    ════════════════════════════════════════ */
+    @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+    .fade-in { animation: fadeIn .25s ease forwards; }
+
+    /* ════════════════════════════════════════
+       SCREEN TITLE STRIP
+    ════════════════════════════════════════ */
+    .page-header {
+      background: var(--black);
+      border-bottom: 2px solid var(--burg);
+      padding: 28px 28px 24px;
+    }
+    .page-header h1 {
+      font-family: "Georgia", serif;
+      font-size: 26px; font-weight: 700;
+      color: var(--white); margin-bottom: 4px;
+    }
+    .page-header p {
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 13px; color: var(--grey-mid);
+    }
+    .page-header-inner { max-width: 660px; margin: 0 auto; }
+
+    /* ════════════════════════════════════════
+       RESPONSIVE
+    ════════════════════════════════════════ */
+    @media (max-width: 520px) {
+      .nav-logo-sub, .nav-logo-divider { display: none; }
+      .step-label { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════ NAVBAR -->
+<nav>
+  <button class="nav-logo" onclick="showScreen('home')">
+    <span class="nav-logo-name">Lawgda</span>
+    <span class="nav-logo-divider"></span>
+    <span class="nav-logo-sub">Secure Electronic Evidence</span>
+  </button>
+  <div class="nav-links">
+    <button onclick="showScreen('sign')">Sign Document</button>
+    <button onclick="showScreen('verify')">Verify Document</button>
+    <button onclick="showScreen('documents')">My Documents</button>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════════════════════════════ HOME -->
+<div id="screen-home" class="screen active">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-eyebrow">MVP – Secure Digital Signing &amp; Verification</div>
+    <h1 class="hero-title">Legal Documents You Can <span class="gold">Trust</span></h1>
+    <p class="hero-sub">
+      Lawgda lets you digitally sign PDF documents using your own certificate, append a
+      tamper-evident signature page, and verify authenticity instantly via QR code.
+    </p>
+    <div class="hero-cta">
+      <button class="btn btn-gold" onclick="showScreen('sign')">Sign a Document →</button>
+      <button class="btn btn-outline" style="color:#d0cbc2;border-color:rgba(208,203,194,.4);" onclick="showScreen('verify')">Verify a Document</button>
+    </div>
+  </div>
+
+  <!-- Key Features -->
+  <section>
+    <div class="container">
+      <div class="section-header">
+        <span class="section-eyebrow">What We Offer</span>
+        <div class="section-title">Key Features</div>
+        <div class="section-rule"><span></span><i></i><span></span></div>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-cell">
+          <div class="feature-icon">🔒</div>
+          <div class="feature-title">Client-Side SHA-256 Hashing</div>
+          <div class="feature-desc">Documents are hashed in the browser using the Web Crypto API. Original bytes never leave your device unprocessed.</div>
+        </div>
+        <div class="feature-cell">
+          <div class="feature-icon">🛡️</div>
+          <div class="feature-title">AES-256-GCM Key Management</div>
+          <div class="feature-desc">Your BYOC private key is encrypted with AES-256-GCM + HKDF before storage. Plaintext keys never persist.</div>
+        </div>
+        <div class="feature-cell">
+          <div class="feature-icon">✍️</div>
+          <div class="feature-title">RSA-SHA256 Digital Signatures</div>
+          <div class="feature-desc">Bring Your Own Certificate (.p12 / PKCS#12). The backend signs using your KMS-protected private key.</div>
+        </div>
+        <div class="feature-cell">
+          <div class="feature-icon">📄</div>
+          <div class="feature-title">Appended Certificate Model</div>
+          <div class="feature-desc">A separate signature page with QR code is appended to your PDF. The original document is never modified.</div>
+        </div>
+        <div class="feature-cell">
+          <div class="feature-icon">🔍</div>
+          <div class="feature-title">Cryptographic Verification</div>
+          <div class="feature-desc">Re-upload the original to verify: re-hash, compare against stored hash, validate RSA signature.</div>
+        </div>
+        <div class="feature-cell">
+          <div class="feature-icon">⚖️</div>
+          <div class="feature-title">Regulatory Compliance</div>
+          <div class="feature-desc">Designed to adhere to REE, RA 8792 (E-Commerce Act), and RA 10173 (Data Privacy Act) – Privacy by Design.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="gold-rule"></div>
+
+  <!-- How it works -->
+  <section>
+    <div class="container-sm">
+      <div class="section-header">
+        <span class="section-eyebrow">Process</span>
+        <div class="section-title">How It Works</div>
+        <div class="section-rule"><span></span><i></i><span></span></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div class="how-step">
+          <div class="how-num">01</div>
+          <div class="how-content">
+            <div class="how-title">Upload PDF Document</div>
+            <div class="how-desc">Select your PDF. The browser instantly computes the SHA-256 hash client-side using the Web Crypto API.</div>
+          </div>
+        </div>
+        <div class="how-step">
+          <div class="how-num">02</div>
+          <div class="how-content">
+            <div class="how-title">Upload Your Certificate (BYOC)</div>
+            <div class="how-desc">Provide your .p12 certificate. Lawgda encrypts your private key with AES-256-GCM and stores only the ciphertext.</div>
+          </div>
+        </div>
+        <div class="how-step">
+          <div class="how-num">03</div>
+          <div class="how-content">
+            <div class="how-title">Sign Document</div>
+            <div class="how-desc">The backend retrieves and decrypts your key in-memory only, RSA-signs the document hash, and generates the combined PDF.</div>
+          </div>
+        </div>
+        <div class="how-step">
+          <div class="how-num">04</div>
+          <div class="how-content">
+            <div class="how-title">Download Signed Document</div>
+            <div class="how-desc">Receive the original PDF with an appended signature page containing metadata and a QR code linking to the verification URL.</div>
+          </div>
+        </div>
+        <div class="how-step">
+          <div class="how-num">05</div>
+          <div class="how-content">
+            <div class="how-title">Verify Authenticity</div>
+            <div class="how-desc">Anyone can scan the QR code or re-upload the original file to cryptographically verify its integrity.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="gold-rule"></div>
+
+  <!-- Tech Stack -->
+  <section>
+    <div class="container">
+      <div class="section-header">
+        <span class="section-eyebrow">Architecture</span>
+        <div class="section-title">Technology Stack</div>
+        <div class="section-rule"><span></span><i></i><span></span></div>
+      </div>
+      <div class="tech-grid">
+        <div class="tech-cell"><div class="tech-label">Frontend</div><div class="tech-value">Next.js / React</div></div>
+        <div class="tech-cell"><div class="tech-label">Database</div><div class="tech-value">Supabase (PostgreSQL)</div></div>
+        <div class="tech-cell"><div class="tech-label">Storage</div><div class="tech-value">Supabase Storage</div></div>
+        <div class="tech-cell"><div class="tech-label">KMS</div><div class="tech-value">AES-256-GCM (HKDF)</div></div>
+        <div class="tech-cell"><div class="tech-label">Signing</div><div class="tech-value">RSA-SHA256 (BYOC)</div></div>
+        <div class="tech-cell"><div class="tech-label">Hashing</div><div class="tech-value">SHA-256 (Web Crypto)</div></div>
+        <div class="tech-cell"><div class="tech-label">PDF</div><div class="tech-value">pdf-lib + QR Code</div></div>
+        <div class="tech-cell"><div class="tech-label">Hosting</div><div class="tech-value">Vercel</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="gold-rule"></div>
+
+  <!-- Compliance -->
+  <section style="padding-bottom:56px;">
+    <div class="container">
+      <div class="compliance-band">
+        <h2>Regulatory Compliance</h2>
+        <p>Built from the ground up with Philippine digital law in mind.</p>
+        <div class="compliance-tags">
+          <span class="comp-tag">RA 8792 – E-Commerce Act</span>
+          <span class="comp-tag">RA 10173 – Data Privacy Act</span>
+          <span class="comp-tag">REE – Rules on Electronic Evidence</span>
+          <span class="comp-tag">Privacy by Design</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /home -->
+
+
+<!-- ═══════════════════════════════════════════════ SIGN -->
+<div id="screen-sign" class="screen">
+
+  <div class="page-header">
+    <div class="page-header-inner">
+      <h1>Sign a Document</h1>
+      <p>Upload your PDF, provide your BYOC certificate, and receive a tamper-evident signed document.</p>
+    </div>
+  </div>
+
+  <div class="container-sm" style="padding-top:32px;padding-bottom:52px;">
+
+    <!-- Step indicator -->
+    <div class="steps" id="sign-steps"></div>
+
+    <!-- Step 1 -->
+    <div id="sign-step-1" class="sign-panel card fade-in">
+      <p style="font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--burg-dark);margin-bottom:16px;">Step 1 — Upload Your PDF Document</p>
+      <div id="dropzone" class="dropzone" onclick="simulateFileSelect()">
+        <div class="dropzone-icon">📂</div>
+        <p style="font-family:'Helvetica Neue',sans-serif;font-size:14px;font-weight:600;color:var(--grey-dark);">Drop your PDF here or click to browse</p>
+        <p style="font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--grey-mid);margin-top:4px;">PDF files only</p>
+      </div>
+      <div id="hash-result" class="hidden" style="margin-top:16px;">
+        <div class="alert alert-info" style="margin-bottom:14px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <span style="font-size:16px;">✔</span>
+            <strong style="font-family:'Helvetica Neue',sans-serif;font-size:13px;color:var(--charcoal);">Document loaded: <span id="file-name-display" style="color:var(--burg-dark);"></span></strong>
+          </div>
+          <div style="font-family:'Helvetica Neue',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--grey-mid);margin-bottom:4px;">SHA-256 Hash (client-side)</div>
+          <div id="hash-display" class="mono" style="font-size:11px;color:var(--charcoal);background:var(--white);border:1px solid var(--grey-light);padding:8px 10px;word-break:break-all;"></div>
+        </div>
+        <button class="btn btn-gold btn-full" onclick="signStep(2)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div id="sign-step-2" class="sign-panel card hidden fade-in" style="display:flex;flex-direction:column;gap:16px;">
+      <p style="font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--burg-dark);">Step 2 — Provide Your Certificate (BYOC)</p>
+      <div class="alert alert-info" style="font-family:'Helvetica Neue',sans-serif;font-size:13px;">
+        <strong>Document ready:</strong> contract_nda.pdf — <span class="mono">a4f3c9…</span>
+      </div>
+      <div>
+        <label class="input-label">Signer Email</label>
+        <input class="input" type="email" value="juan.dela.cruz@lawfirm.ph" />
+      </div>
+      <div>
+        <label class="input-label">PKCS#12 Certificate (.p12 / .pfx)</label>
+        <div class="dropzone" style="padding:16px;border-color:var(--burg);background:#FDF5F6;" onclick="simulateCertUpload()">
+          <p id="cert-label" style="font-family:'Helvetica Neue',sans-serif;font-size:13px;color:var(--burg-dark);font-weight:600;">juan_delacruz_cert.p12 ✓</p>
+        </div>
+      </div>
+      <div>
+        <label class="input-label">Certificate Password</label>
+        <input class="input" type="password" value="••••••••" />
+      </div>
+      <div id="kms-result" class="hidden alert alert-success fade-in">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">
+          <span>🔐</span>
+          <strong style="font-family:'Helvetica Neue',sans-serif;font-size:13px;color:var(--success);">Certificate stored in KMS (AES-256-GCM encrypted)</strong>
+        </div>
+        <div style="font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--grey-dark);margin-top:3px;"><strong>Key ID:</strong> <span class="mono">7f3a1b2c-…</span></div>
+        <div style="font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--grey-dark);"><strong>Subject:</strong> CN=Juan Dela Cruz, O=Lawfirm, C=PH</div>
+      </div>
+      <button id="store-cert-btn" class="btn btn-gold btn-full" onclick="storeCert()">Store Certificate in KMS</button>
+      <p style="font-family:'Helvetica Neue',sans-serif;font-size:11px;color:var(--grey-mid);text-align:center;letter-spacing:.3px;">Your private key is encrypted with AES-256-GCM before storage. It is never persisted in plaintext.</p>
+    </div>
+
+    <!-- Step 3 -->
+    <div id="sign-step-3" class="sign-panel card hidden fade-in">
+      <p style="font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--burg-dark);margin-bottom:16px;">Step 3 — Review &amp; Sign</p>
+      <div style="margin-bottom:18px;">
+        <div class="detail-row"><span class="detail-key">File</span><span class="detail-val">contract_nda.pdf</span></div>
+        <div class="detail-row"><span class="detail-key">SHA-256 Hash</span><span class="detail-val mono">a4f3c9d7e2b18f56a7c3d9…</span></div>
+        <div class="detail-row"><span class="detail-key">Signer Email</span><span class="detail-val">juan.dela.cruz@lawfirm.ph</span></div>
+        <div class="detail-row"><span class="detail-key">Certificate</span><span class="detail-val" style="font-size:11px;">CN=Juan Dela Cruz, O=Lawfirm, C=PH</span></div>
+        <div class="detail-row"><span class="detail-key">Algorithm</span><span class="detail-val">RSA-SHA256</span></div>
+      </div>
+      <button class="btn btn-gold btn-full" onclick="simulateSigning()">Sign Document</button>
+    </div>
+
+    <!-- Step 3 Loading -->
+    <div id="sign-step-3-loading" class="sign-panel card hidden fade-in" style="text-align:center;padding:44px 24px;">
+      <div class="spinner" style="margin:0 auto 20px;"></div>
+      <p style="font-family:'Helvetica Neue',sans-serif;font-weight:700;font-size:15px;color:var(--charcoal);">Signing in progress…</p>
+      <p style="font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--grey-mid);margin-top:6px;letter-spacing:.3px;">Decrypting key · RSA-SHA256 sign · Appending signature page</p>
+    </div>
+
+    <!-- Step 4 Done -->
+    <div id="sign-step-4" class="sign-panel card hidden fade-in" style="display:flex;flex-direction:column;gap:18px;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:44px;height:44px;background:var(--success-bg);border:2px solid var(--success);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;filter:grayscale(.2);">✔</div>
+        <div>
+          <h2 style="font-family:'Georgia',serif;font-size:17px;font-weight:700;color:var(--charcoal);">Document Signed Successfully</h2>
+          <p style="font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--grey-mid);">A signature page with QR code has been appended.</p>
+        </div>
+      </div>
+      <div>
+        <div class="detail-row"><span class="detail-key">Document ID</span><span class="detail-val mono" style="font-size:11px;">d1e2f3a4-b5c6-7d8e-9f0a…</span></div>
+        <div class="detail-row"><span class="detail-key">Hash</span><span class="detail-val mono" style="font-size:11px;">a4f3c9d7e2b18f56…</span></div>
+        <div class="detail-row"><span class="detail-key">Signed At</span><span class="detail-val">Apr 11, 2026 · 10:35 AM PHT</span></div>
+        <div class="detail-row"><span class="detail-key">Verification URL</span><a href="#" onclick="return false;" style="font-size:12px;">/verify?id=d1e2f3a4…</a></div>
+      </div>
+
+      <!-- Signature page preview -->
+      <div>
+        <p style="font-family:'Helvetica Neue',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--grey-mid);margin-bottom:8px;">Signature Page Preview (appended to your PDF)</p>
+        <div class="sig-preview">
+          <div class="sig-preview-header">
+            <div>
+              <div class="sig-preview-title">LAWGDA</div>
+              <div class="sig-preview-sub">Secure Electronic Evidence Management</div>
+            </div>
+            <div class="sig-preview-cert">Digital Signature Certificate</div>
+          </div>
+          <div class="sig-preview-body">
+            <div class="sig-preview-section">Document Information</div>
+            <table>
+              <tr><td>Filename:</td><td>contract_nda.pdf</td></tr>
+              <tr><td>Document ID:</td><td class="mono" style="font-size:9px;color:var(--grey-mid);">d1e2f3a4-b5c6-7d8e-9f0a-b1c2d3e4f5a6</td></tr>
+              <tr><td>SHA-256 Hash:</td><td class="mono" style="font-size:9px;color:var(--grey-mid);word-break:break-all;">a4f3c9d7e2b18f56a7c3d9e1f4b2c8d7e2b18f56a7c3d9e1…</td></tr>
+              <tr><td>Signed At:</td><td>April 11, 2026 · 10:35 AM PHT</td></tr>
+              <tr><td>Signer Email:</td><td>juan.dela.cruz@lawfirm.ph</td></tr>
+              <tr><td>Certificate:</td><td>CN=Juan Dela Cruz, O=Lawfirm, C=PH</td></tr>
+            </table>
+            <div class="sig-preview-inner">
+              <div style="flex:1;">
+                <div class="sig-preview-section">Digital Signature (RSA-SHA256)</div>
+                <p class="mono" style="font-size:9px;color:var(--grey-mid);word-break:break-all;">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3v7…</p>
+              </div>
+              <div style="text-align:center;flex-shrink:0;margin-left:14px;">
+                <div class="sig-preview-qr"></div>
+                <p style="font-family:'Helvetica Neue',sans-serif;font-size:9px;font-weight:700;margin-top:4px;color:var(--charcoal);">Scan to Verify</p>
+                <p class="mono" style="font-size:8px;color:var(--grey-mid);">/verify?id=d1e2f3a4</p>
+              </div>
+            </div>
+          </div>
+          <div class="sig-preview-footer">
+            Digitally signed via Lawgda · Compliant with RA 8792 &amp; RA 10173 · https://lawgda.vercel.app/verify?id=d1e2f3a4
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-dark btn-full" onclick="downloadMockPdf()">⬇ Download Signed PDF</button>
+      <button onclick="showScreen('verify')" style="background:none;border:none;font-family:'Helvetica Neue',sans-serif;font-size:12px;letter-spacing:1px;color:var(--burg-dark);cursor:pointer;text-transform:uppercase;">View Verification Page →</button>
+    </div>
+
+  </div>
+</div><!-- /sign -->
+
+
+<!-- ═══════════════════════════════════════════════ VERIFY -->
+<div id="screen-verify" class="screen">
+
+  <div class="page-header">
+    <div class="page-header-inner">
+      <h1>Verify a Document</h1>
+      <p>Confirm that a signed document has not been tampered with and that the digital signature is cryptographically valid.</p>
+    </div>
+  </div>
+
+  <div class="container-sm" style="padding-top:32px;padding-bottom:52px;">
+
+    <!-- Mode tabs -->
+    <div style="display:flex;gap:0;margin-bottom:22px;border:1px solid var(--grey-light);width:fit-content;">
+      <button id="tab-id"   class="btn btn-dark" onclick="verifyTab('id')"   style="border-radius:0;border:none;letter-spacing:1px;">Verify by Document ID</button>
+      <button id="tab-file" class="btn btn-outline" onclick="verifyTab('file')" style="border-radius:0;letter-spacing:1px;">Verify by File Upload</button>
+    </div>
+
+    <!-- ID panel -->
+    <div id="verify-id-panel" class="card fade-in" style="display:flex;flex-direction:column;gap:14px;">
+      <div>
+        <label class="input-label">Document ID</label>
+        <input class="input mono" type="text" value="d1e2f3a4-b5c6-7d8e-9f0a-b1c2d3e4f5a6" />
+      </div>
+      <button class="btn btn-gold btn-full" onclick="runVerification()">Verify Document</button>
+    </div>
+
+    <!-- File panel -->
+    <div id="verify-file-panel" class="card hidden fade-in" style="display:flex;flex-direction:column;gap:14px;">
+      <div>
+        <label class="input-label">Document ID</label>
+        <input class="input mono" type="text" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" />
+      </div>
+      <div>
+        <label class="input-label">Original PDF (re-upload to verify)</label>
+        <div class="dropzone" style="padding:16px;" onclick="simulateVerifyFile()">
+          <p id="verify-file-label" style="font-family:'Helvetica Neue',sans-serif;font-size:13px;color:var(--grey-mid);">Click to select original PDF</p>
+        </div>
+        <p id="verify-hash-display" class="mono hidden" style="font-size:11px;color:var(--grey-mid);margin-top:4px;word-break:break-all;"></p>
+      </div>
+      <button class="btn btn-gold btn-full" onclick="runVerification()">Verify Document</button>
+    </div>
+
+    <!-- Success result -->
+    <div id="verify-result" class="hidden fade-in" style="margin-top:20px;display:flex;flex-direction:column;gap:12px;">
+      <div class="alert alert-success" style="display:flex;align-items:flex-start;gap:12px;">
+        <span style="font-size:20px;margin-top:1px;filter:grayscale(.3);">✔</span>
+        <div>
+          <p style="font-family:'Georgia',serif;font-weight:700;color:var(--success);font-size:15px;">Document Verified</p>
+          <p style="font-family:'Helvetica Neue',sans-serif;font-size:13px;color:var(--success);margin-top:2px;">Document is authentic and has not been tampered with.</p>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="check-row">
+          <div class="check-icon">✔</div>
+          <div><div class="check-title">Hash Match</div><div class="check-desc">SHA-256 hash of the original document matches the stored record</div></div>
+        </div>
+        <div class="check-row">
+          <div class="check-icon">✔</div>
+          <div><div class="check-title">Signature Valid</div><div class="check-desc">RSA-SHA256 signature verified against the signer's certificate</div></div>
+        </div>
+      </div>
+      <div class="card" style="border-top-color:var(--grey-light);">
+        <div class="detail-row"><span class="detail-key">Document ID</span><span class="detail-val mono" style="font-size:11px;">d1e2f3a4-b5c6-7d8e-9f0a-b1c2d3e4f5a6</span></div>
+        <div class="detail-row"><span class="detail-key">Filename</span><span class="detail-val">contract_nda.pdf</span></div>
+        <div class="detail-row"><span class="detail-key">Signer</span><span class="detail-val">juan.dela.cruz@lawfirm.ph</span></div>
+        <div class="detail-row"><span class="detail-key">Certificate</span><span class="detail-val" style="font-size:12px;">CN=Juan Dela Cruz, O=Lawfirm, C=PH</span></div>
+        <div class="detail-row"><span class="detail-key">Signed At</span><span class="detail-val">April 11, 2026 · 10:35 AM PHT</span></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <button onclick="resetVerify()" style="background:none;border:none;font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--burg-dark);cursor:pointer;letter-spacing:.5px;">← Verify another document</button>
+        <button onclick="toggleVerifyResult()" style="border:1px solid var(--grey-light);background:var(--white);font-family:'Helvetica Neue',sans-serif;font-size:11px;color:var(--grey-mid);padding:4px 10px;cursor:pointer;letter-spacing:.5px;border-radius:1px;">Show ✗ Failed demo</button>
+      </div>
+    </div>
+
+    <!-- Fail result -->
+    <div id="verify-fail" class="hidden fade-in" style="margin-top:20px;display:flex;flex-direction:column;gap:12px;">
+      <div class="alert alert-error" style="display:flex;align-items:flex-start;gap:12px;">
+        <span style="font-size:20px;margin-top:1px;">✗</span>
+        <div>
+          <p style="font-family:'Georgia',serif;font-weight:700;color:var(--error);font-size:15px;">Verification Failed</p>
+          <p style="font-family:'Helvetica Neue',sans-serif;font-size:13px;color:var(--error);margin-top:2px;">Document hash mismatch – the file may have been modified or corrupted.</p>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="check-row">
+          <div class="check-icon">✗</div>
+          <div><div class="check-title">Hash Mismatch</div><div class="check-desc">The re-computed SHA-256 hash does not match the stored record</div></div>
+        </div>
+        <div class="check-row">
+          <div class="check-icon">—</div>
+          <div><div class="check-title">Signature Check Skipped</div><div class="check-desc">Skipped due to hash mismatch — document integrity cannot be confirmed</div></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <button onclick="resetVerify()" style="background:none;border:none;font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--burg-dark);cursor:pointer;letter-spacing:.5px;">← Verify another document</button>
+        <button onclick="toggleVerifyResult()" style="border:1px solid var(--grey-light);background:var(--white);font-family:'Helvetica Neue',sans-serif;font-size:11px;color:var(--grey-mid);padding:4px 10px;cursor:pointer;letter-spacing:.5px;border-radius:1px;">Show ✔ Success demo</button>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /verify -->
+
+
+<!-- ═══════════════════════════════════════════════ DOCUMENTS -->
+<div id="screen-documents" class="screen">
+
+  <div class="page-header">
+    <div class="page-header-inner">
+      <h1>My Documents</h1>
+      <p>View all documents you have signed.</p>
+    </div>
+  </div>
+
+  <div class="container" style="padding-top:32px;padding-bottom:52px;">
+    <form onsubmit="return false;" style="display:flex;gap:10px;margin-bottom:28px;max-width:660px;">
+      <input class="input" type="email" value="juan.dela.cruz@lawfirm.ph" style="flex:1;" />
+      <button type="submit" class="btn btn-gold">Search</button>
+    </form>
+
+    <div class="doc-row">
+      <div style="min-width:0;">
+        <p style="font-family:'Georgia',serif;font-weight:700;font-size:15px;color:var(--charcoal);margin-bottom:4px;">contract_nda.pdf</p>
+        <p class="mono" style="font-size:11px;color:var(--grey-mid);margin-bottom:2px;">ID: d1e2f3a4-b5c6-7d8e-9f0a-b1c2d3e4f5a6</p>
+        <p style="font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--grey-mid);margin-bottom:2px;">Signed: April 11, 2026 · 10:35 AM PHT</p>
+        <p style="font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--grey-mid);margin-bottom:2px;">CN=Juan Dela Cruz, O=Lawfirm, C=PH</p>
+        <p class="mono" style="font-size:11px;color:var(--grey-mid);">Hash: a4f3c9d7e2b18f56…</p>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <span class="badge badge-gold" style="display:block;margin-bottom:8px;">Signed</span>
+        <button onclick="showScreen('verify')" style="background:none;border:none;font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--burg-dark);cursor:pointer;letter-spacing:.5px;">Verify →</button>
+      </div>
+    </div>
+
+    <div class="doc-row">
+      <div style="min-width:0;">
+        <p style="font-family:'Georgia',serif;font-weight:700;font-size:15px;color:var(--charcoal);margin-bottom:4px;">deed_of_sale_2026.pdf</p>
+        <p class="mono" style="font-size:11px;color:var(--grey-mid);margin-bottom:2px;">ID: e9f8a7b6-c5d4-3e2f-1a0b-c1d2e3f4a5b6</p>
+        <p style="font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--grey-mid);margin-bottom:2px;">Signed: April 9, 2026 · 3:14 PM PHT</p>
+        <p style="font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--grey-mid);margin-bottom:2px;">CN=Juan Dela Cruz, O=Lawfirm, C=PH</p>
+        <p class="mono" style="font-size:11px;color:var(--grey-mid);">Hash: 7b1c4e8d9f2a3c5e…</p>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <span class="badge badge-green" style="display:block;margin-bottom:8px;">Verified</span>
+        <button onclick="showScreen('verify')" style="background:none;border:none;font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--burg-dark);cursor:pointer;letter-spacing:.5px;">Verify →</button>
+      </div>
+    </div>
+
+    <div class="doc-row">
+      <div style="min-width:0;">
+        <p style="font-family:'Georgia',serif;font-weight:700;font-size:15px;color:var(--charcoal);margin-bottom:4px;">affidavit_of_loss.pdf</p>
+        <p class="mono" style="font-size:11px;color:var(--grey-mid);margin-bottom:2px;">ID: f0a1b2c3-d4e5-6f7a-8b9c-0d1e2f3a4b5c</p>
+        <p style="font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--grey-mid);margin-bottom:2px;">Signed: March 28, 2026 · 9:00 AM PHT</p>
+        <p style="font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--grey-mid);margin-bottom:2px;">CN=Juan Dela Cruz, O=Lawfirm, C=PH</p>
+        <p class="mono" style="font-size:11px;color:var(--grey-mid);">Hash: 3d5f7a9c1e2b4d6f…</p>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <span class="badge badge-red" style="display:block;margin-bottom:8px;">Failed</span>
+        <button onclick="showScreen('verify')" style="background:none;border:none;font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--burg-dark);cursor:pointer;letter-spacing:.5px;">Verify →</button>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /documents -->
+
+
+<!-- ═══════════════════════════════════════════════ FOOTER -->
+<footer>
+  <span>LAWGDA</span> © 2026 · Compliant with RA 8792, RA 10173 (Data Privacy Act) · Privacy by Design
+</footer>
+
+
+<!-- ═══════════════════════════════════════════════ JAVASCRIPT -->
+<script>
+/* ── Navigation ── */
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (name === 'sign') initSignWizard();
+}
+
+/* ── Sign wizard ── */
+const STEP_LABELS = ['Upload PDF', 'BYOC Certificate', 'Sign', 'Done'];
+let currentStep = 1;
+
+function initSignWizard() {
+  currentStep = 1;
+  renderSteps(1);
+  document.querySelectorAll('.sign-panel').forEach(p => {
+    p.classList.add('hidden');
+    p.style.display = '';
+  });
+  const s1 = document.getElementById('sign-step-1');
+  s1.classList.remove('hidden');
+  document.getElementById('hash-result').classList.add('hidden');
+  document.getElementById('dropzone').style.display = '';
+  document.getElementById('kms-result').classList.add('hidden');
+  const btn = document.getElementById('store-cert-btn');
+  btn.textContent = 'Store Certificate in KMS';
+  btn.disabled = false;
+}
+
+function renderSteps(active) {
+  const el = document.getElementById('sign-steps');
+  el.innerHTML = '';
+  STEP_LABELS.forEach((label, i) => {
+    const num = i + 1;
+    const done     = num < active;
+    const isActive = num === active;
+
+    const circle = document.createElement('div');
+    circle.className = 'step-circle ' + (done ? 'done' : isActive ? 'active' : 'pending');
+    circle.textContent = done ? '✓' : num;
+    el.appendChild(circle);
+
+    const lbl = document.createElement('span');
+    lbl.className = 'step-label ' + (isActive ? 'active' : 'pending');
+    lbl.textContent = label;
+    el.appendChild(lbl);
+
+    if (i < STEP_LABELS.length - 1) {
+      const line = document.createElement('div');
+      line.className = 'step-line ' + (done ? 'done' : 'pending');
+      el.appendChild(line);
+    }
+  });
+}
+
+function signStep(step) {
+  currentStep = step;
+  renderSteps(step);
+  document.querySelectorAll('.sign-panel').forEach(p => p.classList.add('hidden'));
+  const target = document.getElementById('sign-step-' + step);
+  target.classList.remove('hidden');
+  if (['sign-step-2','sign-step-4'].includes('sign-step-' + step)) {
+    target.style.display = 'flex';
+  }
+}
+
+function simulateFileSelect() {
+  const names = ['contract_nda.pdf', 'affidavit_2026.pdf', 'deed_of_sale.pdf'];
+  const name = names[Math.floor(Math.random() * names.length)];
+  document.getElementById('file-name-display').textContent = name;
+  document.getElementById('hash-display').textContent = randomHex(64);
+  document.getElementById('dropzone').style.display = 'none';
+  document.getElementById('hash-result').classList.remove('hidden');
+}
+
+function simulateCertUpload() {
+  const lbl = document.getElementById('cert-label');
+  lbl.textContent = 'juan_delacruz_cert.p12 ✓';
+}
+
+function storeCert() {
+  const btn = document.getElementById('store-cert-btn');
+  btn.textContent = 'Encrypting & storing…';
+  btn.disabled = true;
+  setTimeout(() => {
+    document.getElementById('kms-result').classList.remove('hidden');
+    btn.textContent = '✓ Certificate stored';
+    setTimeout(() => signStep(3), 1000);
+  }, 1400);
+}
+
+function simulateSigning() {
+  document.getElementById('sign-step-3').classList.add('hidden');
+  document.getElementById('sign-step-3-loading').classList.remove('hidden');
+  renderSteps(3);
+  setTimeout(() => {
+    document.getElementById('sign-step-3-loading').classList.add('hidden');
+    signStep(4);
+    document.getElementById('sign-step-4').style.display = 'flex';
+  }, 2000);
+}
+
+function downloadMockPdf() {
+  alert('In the real application this downloads the combined PDF.\n\nThe signature page preview shown above is appended to your original document.');
+}
+
+/* ── Verify ── */
+let verifyShowingFail = false;
+
+function verifyTab(mode) {
+  const isId = mode === 'id';
+  document.getElementById('verify-id-panel').classList.toggle('hidden', !isId);
+  document.getElementById('verify-file-panel').classList.toggle('hidden', isId);
+
+  const tabId   = document.getElementById('tab-id');
+  const tabFile = document.getElementById('tab-file');
+  tabId.className   = isId ? 'btn btn-dark'    : 'btn btn-outline';
+  tabFile.className = isId ? 'btn btn-outline'  : 'btn btn-dark';
+  tabId.style.borderRadius   = '0';
+  tabId.style.border         = isId ? 'none' : '1px solid var(--grey-dark)';
+  tabId.style.letterSpacing  = '1px';
+  tabFile.style.borderRadius = '0';
+  tabFile.style.letterSpacing = '1px';
+  resetVerify();
+}
+
+function runVerification() {
+  verifyShowingFail = false;
+  const r = document.getElementById('verify-result');
+  r.classList.remove('hidden');
+  r.style.display = 'flex';
+  document.getElementById('verify-fail').classList.add('hidden');
+}
+
+function toggleVerifyResult() {
+  verifyShowingFail = !verifyShowingFail;
+  const r = document.getElementById('verify-result');
+  r.classList.toggle('hidden', verifyShowingFail);
+  if (!verifyShowingFail) r.style.display = 'flex';
+  document.getElementById('verify-fail').classList.toggle('hidden', !verifyShowingFail);
+  const f = document.getElementById('verify-fail');
+  if (!verifyShowingFail) f.style.display = '';
+}
+
+function resetVerify() {
+  document.getElementById('verify-result').classList.add('hidden');
+  document.getElementById('verify-fail').classList.add('hidden');
+  verifyShowingFail = false;
+}
+
+function simulateVerifyFile() {
+  const lbl = document.getElementById('verify-file-label');
+  lbl.textContent = 'contract_nda.pdf ✓';
+  lbl.style.color = 'var(--burg-dark)';
+  lbl.style.fontWeight = '600';
+  const hp = document.getElementById('verify-hash-display');
+  hp.textContent = 'Client hash: ' + randomHex(64);
+  hp.classList.remove('hidden');
+}
+
+function randomHex(len) {
+  return Array.from({length: len}, () => Math.floor(Math.random() * 16).toString(16)).join('');
+}
+</script>
+</body>
+</html>
