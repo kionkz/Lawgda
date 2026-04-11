@@ -12,7 +12,7 @@
     html { font-size: 16px; }
     body {
       font-family: "Georgia", "Times New Roman", serif;
-      background: #F0EDE8;
+      background: #F2F2F4;
       color: #1A1A1A;
       min-height: 100vh;
       display: flex;
@@ -25,17 +25,17 @@
        COLOUR TOKENS
     ════════════════════════════════════════ */
     :root {
-      --gold:        #C9A84C;
-      --gold-dark:   #A8872A;
-      --gold-light:  #F5E8C8;
-      --gold-line:   #D4AF37;
+      --burg:        #7A1530;
+      --burg-dark:   #580E20;
+      --burg-light:  #F5E0E5;
+      --burg-line:   #8B1A2C;
       --black:       #0D0D0D;
       --charcoal:    #1A1A1A;
       --grey-dark:   #3A3A3A;
       --grey-mid:    #6B6B6B;
       --grey-light:  #D0CBC2;
-      --grey-bg:     #F0EDE8;
-      --grey-card:   #FAFAF8;
+      --grey-bg:     #F2F2F4;
+      --grey-card:   #FAFAFA;
       --white:       #FFFFFF;
       --success:     #2A6040;
       --success-bg:  #EAF4EE;
@@ -64,7 +64,7 @@
     .text-center { text-align: center; }
     .text-right  { text-align: right; }
     .hidden { display: none !important; }
-    a { color: var(--gold-dark); }
+    a { color: var(--burg-dark); }
 
     /* ════════════════════════════════════════
        SCREEN SWITCHING
@@ -83,7 +83,7 @@
       align-items: stretch;
       justify-content: space-between;
       position: sticky; top: 0; z-index: 50;
-      border-bottom: 2px solid var(--gold);
+      border-bottom: 2px solid var(--burg);
     }
     .nav-logo {
       display: flex; align-items: center; gap: 14px;
@@ -96,11 +96,11 @@
       font-family: "Georgia", serif;
       font-size: 20px; font-weight: 700;
       letter-spacing: 4px; text-transform: uppercase;
-      color: var(--gold);
+      color: var(--burg);
     }
     .nav-logo-divider {
       width: 1px; height: 22px;
-      background: rgba(201,168,76,.35);
+      background: rgba(122,21,48,.35);
     }
     .nav-logo-sub {
       font-family: "Helvetica Neue", Arial, sans-serif;
@@ -115,12 +115,12 @@
       font-size: 12px; font-weight: 500; letter-spacing: 1px;
       text-transform: uppercase;
       padding: 0 18px; height: 100%;
-      border-left: 1px solid rgba(201,168,76,.12);
+      border-left: 1px solid rgba(122,21,48,.12);
       transition: color .15s, background .15s;
     }
     .nav-links button:hover {
-      color: var(--gold);
-      background: rgba(201,168,76,.06);
+      color: var(--burg);
+      background: rgba(122,21,48,.06);
     }
 
     /* ════════════════════════════════════════
@@ -128,7 +128,7 @@
     ════════════════════════════════════════ */
     .gold-rule {
       height: 1px;
-      background: linear-gradient(to right, transparent, var(--gold-line), transparent);
+      background: linear-gradient(to right, transparent, var(--burg-line), transparent);
       margin: 0;
     }
 
@@ -137,14 +137,14 @@
     ════════════════════════════════════════ */
     footer {
       background: var(--black);
-      border-top: 2px solid var(--gold);
+      border-top: 2px solid var(--burg);
       color: var(--grey-mid);
       font-family: "Helvetica Neue", Arial, sans-serif;
       font-size: 11px; letter-spacing: 1px;
       text-align: center; padding: 14px;
       margin-top: auto;
     }
-    footer span { color: var(--gold); }
+    footer span { color: var(--burg); }
 
     /* ════════════════════════════════════════
        CARD
@@ -152,7 +152,7 @@
     .card {
       background: var(--grey-card);
       border: 1px solid var(--grey-light);
-      border-top: 3px solid var(--gold);
+      border-top: 3px solid var(--burg);
       border-radius: 2px;
       padding: 28px;
       box-shadow: 0 2px 12px rgba(0,0,0,.07);
@@ -175,21 +175,21 @@
       text-decoration: none;
     }
     .btn-gold {
-      background: var(--gold);
+      background: var(--burg);
       color: var(--black);
-      border: 1px solid var(--gold-dark);
+      border: 1px solid var(--burg-dark);
     }
-    .btn-gold:hover { background: var(--gold-dark); color: var(--white); }
+    .btn-gold:hover { background: var(--burg-dark); color: var(--white); }
     .btn-outline {
       background: transparent;
       color: var(--charcoal);
       border: 1px solid var(--grey-dark);
     }
-    .btn-outline:hover { border-color: var(--gold); color: var(--gold-dark); }
+    .btn-outline:hover { border-color: var(--burg); color: var(--burg-dark); }
     .btn-dark {
       background: var(--black);
-      color: var(--gold);
-      border: 1px solid var(--gold-dark);
+      color: var(--burg);
+      border: 1px solid var(--burg-dark);
     }
     .btn-dark:hover { background: var(--grey-dark); }
     .btn-full { width: 100%; text-align: center; display: block; padding: 13px 0; }
@@ -219,7 +219,7 @@
       outline: none;
       transition: border-color .15s;
     }
-    .input:focus { border-color: var(--gold); border-bottom-color: var(--gold); }
+    .input:focus { border-color: var(--burg); border-bottom-color: var(--burg); }
 
     /* ════════════════════════════════════════
        BADGES
@@ -231,7 +231,7 @@
       letter-spacing: 1.5px; text-transform: uppercase;
       padding: 3px 10px; border-radius: 1px;
     }
-    .badge-gold   { background: var(--gold-light); color: var(--gold-dark); border: 1px solid var(--gold); }
+    .badge-gold   { background: var(--burg-light); color: var(--burg-dark); border: 1px solid var(--burg); }
     .badge-green  { background: var(--success-bg); color: var(--success); border: 1px solid #8FC8A8; }
     .badge-red    { background: var(--error-bg);   color: var(--error);   border: 1px solid #E8A8A8; }
     .badge-grey   { background: #E8E5E0; color: var(--grey-dark); border: 1px solid #C0BDB8; }
@@ -251,9 +251,9 @@
       border-left: 4px solid var(--error);
     }
     .alert-info {
-      background: #F5F2ED;
-      border: 1px solid var(--gold);
-      border-left: 4px solid var(--gold-dark);
+      background: #F5F2F4;
+      border: 1px solid var(--burg);
+      border-left: 4px solid var(--burg-dark);
     }
 
     /* ════════════════════════════════════════
@@ -268,7 +268,7 @@
       transition: border-color .15s, background .15s;
       background: var(--white);
     }
-    .dropzone:hover { border-color: var(--gold); background: #FDFAF3; }
+    .dropzone:hover { border-color: var(--burg); background: #FDF5F6; }
     .dropzone-icon { font-size: 32px; margin-bottom: 10px; filter: grayscale(1); }
 
     /* ════════════════════════════════════════
@@ -282,8 +282,8 @@
       font-size: 12px; font-weight: 700; flex-shrink: 0;
       border: 2px solid;
     }
-    .step-circle.done    { background: var(--gold-dark); color: var(--white); border-color: var(--gold-dark); }
-    .step-circle.active  { background: var(--black); color: var(--gold); border-color: var(--gold); }
+    .step-circle.done    { background: var(--burg-dark); color: var(--white); border-color: var(--burg-dark); }
+    .step-circle.active  { background: var(--black); color: var(--burg); border-color: var(--burg); }
     .step-circle.pending { background: transparent; color: var(--grey-light); border-color: var(--grey-light); }
     .step-label {
       font-family: "Helvetica Neue", Arial, sans-serif;
@@ -293,7 +293,7 @@
     .step-label.pending { color: var(--grey-light); }
     .step-line { flex: 1; height: 1px; margin: 0 6px; }
     .step-line.pending { background: var(--grey-light); }
-    .step-line.done    { background: var(--gold); }
+    .step-line.done    { background: var(--burg); }
 
     /* ════════════════════════════════════════
        DETAIL ROWS
@@ -328,7 +328,7 @@
     .sig-preview {
       background: var(--white);
       border: 1px solid var(--grey-light);
-      border-top: 3px solid var(--gold);
+      border-top: 3px solid var(--burg);
       border-radius: 2px;
       overflow: hidden;
       font-size: 11px;
@@ -337,7 +337,7 @@
     }
     .sig-preview-header {
       background: var(--black);
-      border-bottom: 2px solid var(--gold);
+      border-bottom: 2px solid var(--burg);
       color: var(--white);
       padding: 14px 18px;
       display: flex; justify-content: space-between; align-items: center;
@@ -345,14 +345,14 @@
     .sig-preview-title {
       font-family: "Georgia", serif;
       font-size: 17px; font-weight: 700;
-      letter-spacing: 3px; color: var(--gold);
+      letter-spacing: 3px; color: var(--burg);
     }
     .sig-preview-sub   { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 9px; letter-spacing: 1px; color: var(--grey-light); margin-top: 2px; }
     .sig-preview-cert  {
       font-family: "Helvetica Neue", Arial, sans-serif;
       font-size: 9px; letter-spacing: 1px;
-      border: 1px solid var(--gold);
-      color: var(--gold); padding: 4px 8px; border-radius: 1px;
+      border: 1px solid var(--burg);
+      color: var(--burg); padding: 4px 8px; border-radius: 1px;
     }
     .sig-preview-body  { padding: 16px 18px; }
     .sig-preview-body table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
@@ -361,10 +361,10 @@
     .sig-preview-section {
       font-family: "Helvetica Neue", Arial, sans-serif;
       font-size: 9px; font-weight: 700; letter-spacing: 2px;
-      text-transform: uppercase; color: var(--gold-dark); margin-bottom: 6px;
+      text-transform: uppercase; color: var(--burg-dark); margin-bottom: 6px;
       display: flex; align-items: center; gap: 6px;
     }
-    .sig-preview-section::after { content: ''; flex: 1; height: 1px; background: var(--gold-light); }
+    .sig-preview-section::after { content: ''; flex: 1; height: 1px; background: var(--burg-light); }
     .sig-preview-inner { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
     .sig-preview-qr {
       width: 78px; height: 78px; flex-shrink: 0;
@@ -372,7 +372,7 @@
       border: 2px solid #000; border-radius: 2px;
     }
     .sig-preview-footer {
-      background: #F0EDE8; padding: 9px 18px;
+      background: #F2F2F4; padding: 9px 18px;
       font-family: "Helvetica Neue", Arial, sans-serif;
       font-size: 9px; letter-spacing: .5px; color: var(--grey-mid);
       border-top: 1px solid var(--grey-light);
@@ -383,8 +383,8 @@
     ════════════════════════════════════════ */
     .spinner {
       width: 48px; height: 48px; border-radius: 50%;
-      border: 3px solid var(--gold-light);
-      border-top-color: var(--gold-dark);
+      border: 3px solid var(--burg-light);
+      border-top-color: var(--burg-dark);
       animation: spin .9s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
@@ -404,7 +404,7 @@
       padding: 28px 24px;
       transition: background .15s;
     }
-    .feature-cell:hover { background: #FDFAF3; }
+    .feature-cell:hover { background: #FDF5F6; }
     .feature-icon  { font-size: 24px; margin-bottom: 12px; filter: grayscale(1) brightness(.3); }
     .feature-title { font-size: 14px; font-weight: 700; margin-bottom: 7px; color: var(--charcoal); font-family: "Georgia", serif; }
     .feature-desc  { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 12px; color: var(--grey-mid); line-height: 1.6; }
@@ -416,15 +416,15 @@
     .how-num {
       width: 44px; height: 44px; flex-shrink: 0;
       background: var(--black);
-      border: 2px solid var(--gold);
-      color: var(--gold);
+      border: 2px solid var(--burg);
+      color: var(--burg);
       display: flex; align-items: center; justify-content: center;
       font-family: "Georgia", serif; font-weight: 700; font-size: 15px;
     }
     .how-content {
       background: var(--grey-card);
       border: 1px solid var(--grey-light);
-      border-left: 3px solid var(--gold);
+      border-left: 3px solid var(--burg);
       padding: 16px 20px; flex: 1;
     }
     .how-title { font-size: 14px; font-weight: 700; color: var(--charcoal); margin-bottom: 4px; font-family: "Georgia", serif; }
@@ -444,7 +444,7 @@
       background: var(--grey-card);
       padding: 16px 14px; text-align: center;
     }
-    .tech-label { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-dark); margin-bottom: 5px; }
+    .tech-label { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--burg-dark); margin-bottom: 5px; }
     .tech-value { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 13px; font-weight: 500; color: var(--charcoal); }
 
     /* ════════════════════════════════════════
@@ -452,16 +452,16 @@
     ════════════════════════════════════════ */
     .compliance-band {
       background: var(--black);
-      border: 1px solid var(--gold);
-      border-top: 3px solid var(--gold);
+      border: 1px solid var(--burg);
+      border-top: 3px solid var(--burg);
       padding: 32px 28px; text-align: center;
     }
-    .compliance-band h2 { font-family: "Georgia", serif; color: var(--gold); font-size: 20px; font-weight: 700; letter-spacing: 1px; margin-bottom: 6px; }
+    .compliance-band h2 { font-family: "Georgia", serif; color: var(--burg); font-size: 20px; font-weight: 700; letter-spacing: 1px; margin-bottom: 6px; }
     .compliance-band p  { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 12px; color: var(--grey-mid); letter-spacing: .5px; margin-bottom: 18px; }
     .compliance-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
     .comp-tag {
-      border: 1px solid rgba(201,168,76,.4);
-      color: var(--gold-light);
+      border: 1px solid rgba(122,21,48,.4);
+      color: var(--burg-light);
       padding: 6px 16px;
       font-family: "Helvetica Neue", Arial, sans-serif;
       font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
@@ -473,7 +473,7 @@
     ════════════════════════════════════════ */
     .hero {
       background: var(--black);
-      border-bottom: 2px solid var(--gold);
+      border-bottom: 2px solid var(--burg);
       padding: 68px 28px 56px;
       text-align: center;
       color: var(--white);
@@ -485,15 +485,15 @@
       content: '';
       position: absolute; inset: 0;
       background-image:
-        linear-gradient(rgba(201,168,76,.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(201,168,76,.05) 1px, transparent 1px);
+        linear-gradient(rgba(122,21,48,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(122,21,48,.05) 1px, transparent 1px);
       background-size: 40px 40px;
       pointer-events: none;
     }
     .hero-eyebrow {
       display: inline-block;
-      border: 1px solid rgba(201,168,76,.5);
-      color: var(--gold);
+      border: 1px solid rgba(122,21,48,.5);
+      color: var(--burg);
       font-family: "Helvetica Neue", Arial, sans-serif;
       font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
       padding: 6px 20px; margin-bottom: 24px;
@@ -506,7 +506,7 @@
       color: var(--white); margin-bottom: 18px;
       position: relative;
     }
-    .hero-title .gold { color: var(--gold); }
+    .hero-title .gold { color: var(--burg); }
     .hero-sub {
       font-family: "Helvetica Neue", Arial, sans-serif;
       font-size: 15px; color: var(--grey-light);
@@ -522,12 +522,12 @@
       display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
       background: var(--grey-card);
       border: 1px solid var(--grey-light);
-      border-left: 3px solid var(--gold);
+      border-left: 3px solid var(--burg);
       padding: 20px 22px;
       margin-bottom: 12px;
       transition: border-left-color .15s, box-shadow .15s;
     }
-    .doc-row:hover { border-left-color: var(--gold-dark); box-shadow: 0 2px 10px rgba(0,0,0,.07); }
+    .doc-row:hover { border-left-color: var(--burg-dark); box-shadow: 0 2px 10px rgba(0,0,0,.07); }
 
     /* ════════════════════════════════════════
        SECTION HEADERS
@@ -538,7 +538,7 @@
     .section-eyebrow {
       font-family: "Helvetica Neue", Arial, sans-serif;
       font-size: 10px; font-weight: 700; letter-spacing: 3px;
-      text-transform: uppercase; color: var(--gold-dark);
+      text-transform: uppercase; color: var(--burg-dark);
       display: block; margin-bottom: 8px;
     }
     .section-title {
@@ -549,8 +549,8 @@
       display: flex; align-items: center; gap: 12px;
       margin: 10px auto 0; max-width: 160px;
     }
-    .section-rule span { flex: 1; height: 1px; background: var(--gold); }
-    .section-rule i { width: 5px; height: 5px; background: var(--gold); transform: rotate(45deg); display: block; }
+    .section-rule span { flex: 1; height: 1px; background: var(--burg); }
+    .section-rule i { width: 5px; height: 5px; background: var(--burg); transform: rotate(45deg); display: block; }
 
     /* ════════════════════════════════════════
        PAGE SECTION SPACERS
@@ -569,7 +569,7 @@
     ════════════════════════════════════════ */
     .page-header {
       background: var(--black);
-      border-bottom: 2px solid var(--gold);
+      border-bottom: 2px solid var(--burg);
       padding: 28px 28px 24px;
     }
     .page-header h1 {
@@ -780,7 +780,7 @@
 
     <!-- Step 1 -->
     <div id="sign-step-1" class="sign-panel card fade-in">
-      <p style="font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dark);margin-bottom:16px;">Step 1 — Upload Your PDF Document</p>
+      <p style="font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--burg-dark);margin-bottom:16px;">Step 1 — Upload Your PDF Document</p>
       <div id="dropzone" class="dropzone" onclick="simulateFileSelect()">
         <div class="dropzone-icon">📂</div>
         <p style="font-family:'Helvetica Neue',sans-serif;font-size:14px;font-weight:600;color:var(--grey-dark);">Drop your PDF here or click to browse</p>
@@ -790,7 +790,7 @@
         <div class="alert alert-info" style="margin-bottom:14px;">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
             <span style="font-size:16px;">✔</span>
-            <strong style="font-family:'Helvetica Neue',sans-serif;font-size:13px;color:var(--charcoal);">Document loaded: <span id="file-name-display" style="color:var(--gold-dark);"></span></strong>
+            <strong style="font-family:'Helvetica Neue',sans-serif;font-size:13px;color:var(--charcoal);">Document loaded: <span id="file-name-display" style="color:var(--burg-dark);"></span></strong>
           </div>
           <div style="font-family:'Helvetica Neue',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--grey-mid);margin-bottom:4px;">SHA-256 Hash (client-side)</div>
           <div id="hash-display" class="mono" style="font-size:11px;color:var(--charcoal);background:var(--white);border:1px solid var(--grey-light);padding:8px 10px;word-break:break-all;"></div>
@@ -801,7 +801,7 @@
 
     <!-- Step 2 -->
     <div id="sign-step-2" class="sign-panel card hidden fade-in" style="display:flex;flex-direction:column;gap:16px;">
-      <p style="font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dark);">Step 2 — Provide Your Certificate (BYOC)</p>
+      <p style="font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--burg-dark);">Step 2 — Provide Your Certificate (BYOC)</p>
       <div class="alert alert-info" style="font-family:'Helvetica Neue',sans-serif;font-size:13px;">
         <strong>Document ready:</strong> contract_nda.pdf — <span class="mono">a4f3c9…</span>
       </div>
@@ -811,8 +811,8 @@
       </div>
       <div>
         <label class="input-label">PKCS#12 Certificate (.p12 / .pfx)</label>
-        <div class="dropzone" style="padding:16px;border-color:var(--gold);background:#FDFAF3;" onclick="simulateCertUpload()">
-          <p id="cert-label" style="font-family:'Helvetica Neue',sans-serif;font-size:13px;color:var(--gold-dark);font-weight:600;">juan_delacruz_cert.p12 ✓</p>
+        <div class="dropzone" style="padding:16px;border-color:var(--burg);background:#FDF5F6;" onclick="simulateCertUpload()">
+          <p id="cert-label" style="font-family:'Helvetica Neue',sans-serif;font-size:13px;color:var(--burg-dark);font-weight:600;">juan_delacruz_cert.p12 ✓</p>
         </div>
       </div>
       <div>
@@ -833,7 +833,7 @@
 
     <!-- Step 3 -->
     <div id="sign-step-3" class="sign-panel card hidden fade-in">
-      <p style="font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dark);margin-bottom:16px;">Step 3 — Review &amp; Sign</p>
+      <p style="font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--burg-dark);margin-bottom:16px;">Step 3 — Review &amp; Sign</p>
       <div style="margin-bottom:18px;">
         <div class="detail-row"><span class="detail-key">File</span><span class="detail-val">contract_nda.pdf</span></div>
         <div class="detail-row"><span class="detail-key">SHA-256 Hash</span><span class="detail-val mono">a4f3c9d7e2b18f56a7c3d9…</span></div>
@@ -907,7 +907,7 @@
       </div>
 
       <button class="btn btn-dark btn-full" onclick="downloadMockPdf()">⬇ Download Signed PDF</button>
-      <button onclick="showScreen('verify')" style="background:none;border:none;font-family:'Helvetica Neue',sans-serif;font-size:12px;letter-spacing:1px;color:var(--gold-dark);cursor:pointer;text-transform:uppercase;">View Verification Page →</button>
+      <button onclick="showScreen('verify')" style="background:none;border:none;font-family:'Helvetica Neue',sans-serif;font-size:12px;letter-spacing:1px;color:var(--burg-dark);cursor:pointer;text-transform:uppercase;">View Verification Page →</button>
     </div>
 
   </div>
@@ -984,7 +984,7 @@
         <div class="detail-row"><span class="detail-key">Signed At</span><span class="detail-val">April 11, 2026 · 10:35 AM PHT</span></div>
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between;">
-        <button onclick="resetVerify()" style="background:none;border:none;font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--gold-dark);cursor:pointer;letter-spacing:.5px;">← Verify another document</button>
+        <button onclick="resetVerify()" style="background:none;border:none;font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--burg-dark);cursor:pointer;letter-spacing:.5px;">← Verify another document</button>
         <button onclick="toggleVerifyResult()" style="border:1px solid var(--grey-light);background:var(--white);font-family:'Helvetica Neue',sans-serif;font-size:11px;color:var(--grey-mid);padding:4px 10px;cursor:pointer;letter-spacing:.5px;border-radius:1px;">Show ✗ Failed demo</button>
       </div>
     </div>
@@ -1009,7 +1009,7 @@
         </div>
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between;">
-        <button onclick="resetVerify()" style="background:none;border:none;font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--gold-dark);cursor:pointer;letter-spacing:.5px;">← Verify another document</button>
+        <button onclick="resetVerify()" style="background:none;border:none;font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--burg-dark);cursor:pointer;letter-spacing:.5px;">← Verify another document</button>
         <button onclick="toggleVerifyResult()" style="border:1px solid var(--grey-light);background:var(--white);font-family:'Helvetica Neue',sans-serif;font-size:11px;color:var(--grey-mid);padding:4px 10px;cursor:pointer;letter-spacing:.5px;border-radius:1px;">Show ✔ Success demo</button>
       </div>
     </div>
@@ -1044,7 +1044,7 @@
       </div>
       <div style="text-align:right;flex-shrink:0;">
         <span class="badge badge-gold" style="display:block;margin-bottom:8px;">Signed</span>
-        <button onclick="showScreen('verify')" style="background:none;border:none;font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--gold-dark);cursor:pointer;letter-spacing:.5px;">Verify →</button>
+        <button onclick="showScreen('verify')" style="background:none;border:none;font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--burg-dark);cursor:pointer;letter-spacing:.5px;">Verify →</button>
       </div>
     </div>
 
@@ -1058,7 +1058,7 @@
       </div>
       <div style="text-align:right;flex-shrink:0;">
         <span class="badge badge-green" style="display:block;margin-bottom:8px;">Verified</span>
-        <button onclick="showScreen('verify')" style="background:none;border:none;font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--gold-dark);cursor:pointer;letter-spacing:.5px;">Verify →</button>
+        <button onclick="showScreen('verify')" style="background:none;border:none;font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--burg-dark);cursor:pointer;letter-spacing:.5px;">Verify →</button>
       </div>
     </div>
 
@@ -1072,7 +1072,7 @@
       </div>
       <div style="text-align:right;flex-shrink:0;">
         <span class="badge badge-red" style="display:block;margin-bottom:8px;">Failed</span>
-        <button onclick="showScreen('verify')" style="background:none;border:none;font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--gold-dark);cursor:pointer;letter-spacing:.5px;">Verify →</button>
+        <button onclick="showScreen('verify')" style="background:none;border:none;font-family:'Helvetica Neue',sans-serif;font-size:12px;color:var(--burg-dark);cursor:pointer;letter-spacing:.5px;">Verify →</button>
       </div>
     </div>
 
@@ -1241,7 +1241,7 @@ function resetVerify() {
 function simulateVerifyFile() {
   const lbl = document.getElementById('verify-file-label');
   lbl.textContent = 'contract_nda.pdf ✓';
-  lbl.style.color = 'var(--gold-dark)';
+  lbl.style.color = 'var(--burg-dark)';
   lbl.style.fontWeight = '600';
   const hp = document.getElementById('verify-hash-display');
   hp.textContent = 'Client hash: ' + randomHex(64);
